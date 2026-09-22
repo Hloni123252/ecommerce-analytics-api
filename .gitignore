@@ -1,0 +1,15 @@
+.env
+*.db
+*.sqlite3
+test.db
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+poetry_cache/
+poetry_venvs/
+.venv/
+*.pkl
+*.joblib
+CACHEDIR.TAG
+pyvenv.cfg
