@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.core.database import engine, Base
 
+# Import models so they register with Base.metadata
+from app.models import Customer, Product, Order, OrderItem  # noqa: F401
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
