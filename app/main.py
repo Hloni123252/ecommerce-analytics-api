@@ -4,6 +4,7 @@ from app.core.database import engine, Base
 
 # Import models so they register with Base.metadata
 from app.models import Customer, Product, Order, OrderItem  # noqa: F401
+from app.api.v1.endpoints import analytics
 
 
 @asynccontextmanager
@@ -23,6 +24,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.include_router(analytics.router)
 
 @app.get("/")
 async def root():
