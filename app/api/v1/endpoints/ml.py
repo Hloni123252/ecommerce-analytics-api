@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.ml.features import build_customer_features
+from app.ml.features import build_training_features, build_prediction_features
 from app.ml.predictor import (
     train_model,
     predict_batch,
@@ -20,11 +20,12 @@ router = APIRouter(prefix="/ml", tags=["ml"])
 @router.post("/train", response_model=TrainResponse)
 async def train_churn_model(db: AsyncSession = Depends(get_db)):
     """
-    Train the churn prediction model on current order data.
-    
-    Runs synchronously. On large datasets, call this via Celery.
+    Train the churn model using a time-based split.
+
+    Features = customer behavior BEFORE cutoff.
+    Label = whether they ordered AFTER cutoff.
     """
-    df = await build_customer_features(db)
+    df = await build_training_features(db)
     result = train_model(df)
     return {"status": "trained", **result}
 
@@ -34,26 +35,22 @@ async def predict_all(
     limit: int = Query(20, ge=1, le=500),
     db: AsyncSession = Depends(get_db),
 ):
-    """
-    Predict churn for all customers, return the top N at-risk ones.
-    """
+    """Score all current customers, return the top N at-risk."""
     if not is_model_trained():
         raise HTTPException(
             status_code=400,
             detail="Model not trained yet. Call POST /ml/train first.",
         )
 
-    df = await build_customer_features(db)
-    df = df[df["total_orders"] > 0]  # only customers with history
+    df = await build_prediction_features(db)
+    df = df[df["total_orders"] > 0].copy()
 
     df = predict_batch(df)
 
-    # Aggregate
     high = int((df["risk_level"] == "high").sum())
     medium = int((df["risk_level"] == "medium").sum())
     low = int((df["risk_level"] == "low").sum())
 
-    # Top at-risk
     top = df.sort_values("churn_probability", ascending=False).head(limit)
 
     return {
@@ -84,7 +81,7 @@ async def predict_one(
             detail="Model not trained yet. Call POST /ml/train first.",
         )
 
-    df = await build_customer_features(db)
+    df = await build_prediction_features(db)
     customer_row = df[df["customer_id"] == customer_id]
 
     if customer_row.empty:
