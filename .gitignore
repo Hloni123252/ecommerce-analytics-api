@@ -13,3 +13,4 @@ poetry_venvs/
 *.joblib
 CACHEDIR.TAG
 pyvenv.cfg
+app/ml/artifacts/

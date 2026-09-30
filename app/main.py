@@ -6,7 +6,7 @@ from app.core.database import engine, Base
 from app.models import Customer, Product, Order, OrderItem, AnalyticsCache  # noqa: F401
 
 # Import routers
-from app.api.v1.endpoints import analytics, admin
+from app.api.v1.endpoints import analytics, admin, ml
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ app = FastAPI(
 
 app.include_router(analytics.router)
 app.include_router(admin.router)
+app.include_router(ml.router)
 
 
 @app.get("/")
