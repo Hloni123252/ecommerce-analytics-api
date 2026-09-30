@@ -3,8 +3,10 @@ from contextlib import asynccontextmanager
 from app.core.database import engine, Base
 
 # Import models so they register with Base.metadata
-from app.models import Customer, Product, Order, OrderItem  # noqa: F401
-from app.api.v1.endpoints import analytics
+from app.models import Customer, Product, Order, OrderItem, AnalyticsCache  # noqa: F401
+
+# Import routers
+from app.api.v1.endpoints import analytics, admin
 
 
 @asynccontextmanager
@@ -25,6 +27,8 @@ app = FastAPI(
 )
 
 app.include_router(analytics.router)
+app.include_router(admin.router)
+
 
 @app.get("/")
 async def root():
