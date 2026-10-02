@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ecommerce-analytics-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.0"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecommerce-analytics-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: "HS256"
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+
+databases:
+  - name: ecommerce-analytics-db
+    plan: free
+    databaseName: ecomdb
+    user: ecomuser

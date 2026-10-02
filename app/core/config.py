@@ -1,12 +1,18 @@
 from pydantic_settings import BaseSettings
+from typing import Optional
 
 
 class Settings(BaseSettings):
+    # Database
     DATABASE_URL: str
-    REDIS_URL: str
-    CELERY_BROKER_URL: str
-    CELERY_RESULT_BACKEND: str
-    SECRET_KEY: str
+
+    # Redis / Celery (optional in eager mode)
+    REDIS_URL: Optional[str] = "redis://localhost:6380/0"
+    CELERY_BROKER_URL: Optional[str] = "redis://localhost:6380/1"
+    CELERY_RESULT_BACKEND: Optional[str] = "redis://localhost:6380/2"
+
+    # Security
+    SECRET_KEY: str = "change-me-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
