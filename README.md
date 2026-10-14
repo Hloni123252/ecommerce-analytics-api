@@ -2,6 +2,7 @@
 
 > A production-grade analytics platform with FastAPI, Celery, Redis, and ML churn prediction.
 
+[![CI](https://github.com/Hloni123252/ecommerce-analytics-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Hloni123252/ecommerce-analytics-api/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688.svg)](https://fastapi.tiangolo.com/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-red.svg)](https://www.sqlalchemy.org/)
