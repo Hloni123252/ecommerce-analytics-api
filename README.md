@@ -26,4 +26,9 @@ This project is part of a portfolio demonstrating **Back-End Engineering + Data 
 
 ---
 
-## 🏗️ Architecture
+## 🧪 Testing
+
+The API is fully tested with a suite of **7 automated tests** covering core business logic, analytics math, and ML model inference.
+
+```bash
+poetry run pytest -v
